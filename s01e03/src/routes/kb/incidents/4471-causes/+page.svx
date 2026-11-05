@@ -2,9 +2,9 @@
 layout: runbook
 title: '#4471 · two problems, one ticket'
 owner: jasondashaer
-status: open
+status: closed
 reviewed: 2026-11-05
-signature: jasondashaer
+signature: v1.eyJzdWIiOiI3OTUxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM4NTY0NzIsImV4cCI6MTc5Mzk0Mjg3Mn0.x-SbKYe2Qvl3g0KzbvFido35wHRhGdOrjRsJL3dzVoo
 ---
 
 <script>
@@ -14,12 +14,12 @@ signature: jasondashaer
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) says one issue, one fix queued. Its reports hold two problems, and
-the queued fix reaches only one of them.
+[#4471](/kb/incidents/4471) says one issue, one fix queued. Its reports held two problems.
+Engineering closed #4471 on 5 October, and the two problems ended differently.
 
 <Callout kind="warn">
-A parser fix leaves the hint problem in place. Keep the booking-v3 form reports open until the
-hint is fixed too.
+Parser: fixed by `fix(dates): parse dd/mm for eu locales`. Hint: won't fix, because the booking-v3
+form is retired. The parser fix did not touch the hint problem.
 </Callout>
 
 ## What the reports hold
@@ -30,33 +30,34 @@ Each report counts once, by its id, because the export pages overlap. The cause 
 report's tenant and channel, as `causes.ts` runs it. Do not count intake's tag: it is a guess from
 the reporter's browser, and the table shows how far it strays.
 
-The table's last column reads the desk's export, which predates the two tickets below.
+The table's last column reads the desk's export, which predates the two tickets below and the
+engineering update.
 
 ## The two problems
 
-**The shared parser reads dates month first.** A tenant that writes the day first gets the day and
-month swapped. This is what #4471 describes. Ticket:
-[parser](https://github.com/jasondashaer/mega-dev-challenges/issues/4).
+**The shared parser read dates month first.** A tenant that writes the day first got the day and
+month swapped. This is what #4471 describes. Engineering fixed it. Ticket:
+[parser](https://github.com/jasondashaer/mega-dev-challenges/issues/4), closed as completed.
 
-**The booking-v3 form prints the wrong hint.** Its date field says `MM/DD/YYYY`, so people type the
-month first, and the form reads the date the tenant's way, day first. These reports came through
-that form from a day-first tenant. Ticket:
-[hint](https://github.com/jasondashaer/mega-dev-challenges/issues/5).
+**The booking-v3 form printed the wrong hint.** Its date field said `MM/DD/YYYY`, so people typed
+the month first, and the form read the date the tenant's way, day first. These reports came through
+that form from a day-first tenant. Engineering will not fix it, because the form is retired. Ticket:
+[hint](https://github.com/jasondashaer/mega-dev-challenges/issues/5), closed as not planned.
 
-Both look the same in a report: a date with its day and month swapped. So the body does not tell
+Both looked the same in a report: a date with its day and month swapped. So the body does not tell
 them apart. The way the report came in and the form the tenant runs do.
 
 ## What is still unproven
 
 The one-day reports in the note under the table are counted where they are filed. A swap of day and
-month does not explain a one-day move, so check them again once the parser fix is live.
+month does not explain a one-day move, so the parser fix may not have ended them. If they continue,
+open a new ticket.
 
 ## Why they were merged
 
 [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on the subject line. The two problems
 share subject lines: every subject on a hint report also appears on parser reports. So the rule
-could not keep them apart. The decision stays as
-written; a new record has to replace it.
+could not keep them apart. The decision stays as written; a new record has to replace it.
 
 ## Since April
 
