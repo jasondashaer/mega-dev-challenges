@@ -1,0 +1,21 @@
+# User unit on fred: ~/.config/systemd/user/away-agent.service, build context ~/away-agent (agent.py + Dockerfile).
+# The container is the sandbox: read-only root, no capabilities, only /state writable. Secrets come from Bitwarden at start;
+# ~/away-agent/env holds NTFY_URL and the two ntfy topic names, which act as passwords on public ntfy.sh.
+[Unit]
+Description=S02E05 away agent (AgentMail inbox -> policy -> reply; gated acts wait on ntfy approval)
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f away-agent
+# -e NAME without a value copies it from the bws environment, so no secret lands on the command line.
+ExecStart=/bin/sh -c 'BWS_ACCESS_TOKEN="$(cat %h/.config/bws/token)" exec %h/.local/bin/bws run -- docker run --rm --name away-agent \
+  --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --pids-limit 64 --memory 256m \
+  --env-file %h/away-agent/env -v %h/away-agent/state:/state \
+  -e AGENTMAIL_API_KEY -e AGENT_INBOX=jax-mega-inbox@agentmail.to away-agent:latest'
+ExecStop=/usr/bin/docker stop away-agent
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
