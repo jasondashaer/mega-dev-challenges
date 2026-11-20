@@ -1,0 +1,16 @@
+# User unit on fred: ~/.config/systemd/user/email-agent.service, agent at ~/email-agent/agent.py.
+# Secrets come from Bitwarden at start (AGENTMAIL_API_KEY, mega_gemini_api), never from this file.
+[Unit]
+Description=S02E02 email agent (AgentMail inbox -> Gemini -> reply in thread)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment=AGENT_INBOX=jax-mega-inbox@agentmail.to
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/sh -c 'BWS_ACCESS_TOKEN="$(cat %h/.config/bws/token)" exec %h/.local/bin/bws run -- %h/.local/bin/uv run -q %h/email-agent/agent.py'
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
