@@ -1,0 +1,22 @@
+# User unit on fred: ~/.config/systemd/user/mcp-home.service, server at ~/mcp-home/server.py.
+# OWNER_LOGINS lives in ~/mcp-home/env so a tailnet login never lands in this public repo.
+# Publish: mcp-home node (mcp-home-ts.service): tailscale --socket=~/mcp-home/ts/tailscaled.sock funnel --bg --https=443 http://127.0.0.1:8765 (public)
+#          fred node: tailscale serve --bg --https=8444 http://127.0.0.1:8766 (tailnet only, owner consent)
+[Unit]
+Description=S02E03 mcp-home remote MCP server (memo, upload, transcribe)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment=PUBLIC_URL=https://mcp-home.tailab53c1.ts.net
+Environment=CONSENT_URL=https://fred.tailab53c1.ts.net:8444
+Environment=DATA_DIR=%h/mcp-home/data
+Environment=WHISPER_MODEL=small
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=%h/mcp-home/env
+ExecStart=%h/.local/bin/uv run -q -p 3.13 %h/mcp-home/server.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+# Second tailnet node "mcp-home" for fred, so Funnel can own port 443 there while fred:443 stays T3 Code (tailnet only).
+[Unit]
+Description=S02E03 mcp-home tailnet node (userspace tailscaled)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/sbin/tailscaled --tun=userspace-networking --statedir=%h/mcp-home/ts --socket=%h/mcp-home/ts/tailscaled.sock --port=0
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
