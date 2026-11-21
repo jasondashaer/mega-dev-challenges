@@ -13,7 +13,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === 'GET' && url.pathname === '/incidents') {
-      return json({ incidents: await feed(env) });
+      let incidents = await feed(env);
+      const status = url.searchParams.get('status');
+      if (status !== null) incidents = incidents.filter((i) => i.status === status);
+      return json({ incidents });
     }
     const one = request.method === 'GET' && url.pathname.match(/^\/incidents\/([^/]+)$/);
     if (one) {
