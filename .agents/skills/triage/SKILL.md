@@ -112,13 +112,14 @@ section maps it onto the repo's `AGENTS.md`, which wins where the two differ.
 ### Decide, in this order
 1. **Closed**: already shipped, a duplicate of another issue, or asks for nothing the API does.
    Comment naming the issue or record that decided it, close it. Verb `closed`.
-2. **Declined**: it breaks an accepted record or the contract, exposes a secret (the feed's admin
-   token, any token), or asks for something research shows hurts the people it is for. Comment citing
-   the record, contract line or research quote. Verb `declined`.
+2. **Declined**: it breaks an accepted, signed-off record or the contract, or exposes a secret (the
+   feed's admin token, any token). Comment citing the record or contract line. Verb `declined`.
+   Research or an unsigned draft record arguing against a request is not enough: whether to build a
+   product change is the owner's call, so ask (step 3) and put the evidence in your recommendation.
 3. **Ask the owner** (AUT-2): it changes what an existing answer carries (a field added, dropped,
    renamed or reshaped: the contract says every reader sees it), writes or deletes production data
-   (any `POST`/`PATCH`/`DELETE` to the feed), touches client terms or pricing, or two issues pull
-   against each other. Follow "Asking the owner" in `AGENTS.md` exactly: record first (next free id
+   (any `POST`/`PATCH`/`DELETE` to the feed), touches client terms or pricing, two issues pull
+   against each other, or research and records argue against what product or support asks for. Follow "Asking the owner" in `AGENTS.md` exactly: record first (next free id
    from `0007`, every option tagged `decline`, `smaller` or `full`, `issue:` set), then the
    `needs-human` label, then one comment with the numbered options and your recommendation. Verb
    `asked`. Never ask about something you may do alone.
