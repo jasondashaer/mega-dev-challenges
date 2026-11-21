@@ -1,4 +1,5 @@
 # User unit for fred's `agent` user: ~/.config/systemd/user/out-of-office.service.
+# Node 22 lives in ~/.local/node22 because wrangler needs it and fred ships Node 20.
 # The runner idles until ~/.config/out-of-office/env (mode 600) holds the round's TRACKER_URL, TRACKER_TOKEN and LIVE_URL.
 [Unit]
 Description=S03E03 out-of-office agent (course tracker -> claude -p per issue -> Worker deploy)
@@ -7,7 +8,7 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=%h/out-of-office/mega-dev-challenges
-Environment=PATH=%h/out-of-office/mega-dev-challenges/s03e03/runner/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PATH=%h/out-of-office/mega-dev-challenges/s03e03/runner/bin:%h/.local/node22/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/usr/bin/python3 %h/out-of-office/mega-dev-challenges/s03e03/runner/runner.py
 Restart=always
