@@ -1,0 +1,15 @@
+name = "sched-prod-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Where production incidents come from: the feed URL the round hands you.
+FEED_URL = ""
+
+# Production: what `npm run deploy` ships.
+[env.production]
+workers_dev = true
+
+# Vars do not inherit into an env, so production names the feed itself.
+[env.production.vars]
+FEED_URL = "https://hq.mega.dev/challenges/out-of-office/feed/3b2a09080350/incidents"

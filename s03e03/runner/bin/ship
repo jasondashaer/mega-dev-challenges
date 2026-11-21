@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Commits the work for one issue, deploys the Worker and checks the live address answers.
+# Usage: ship <issue n> "<commit message>"   (run from anywhere inside the repo)
+set -euo pipefail
+n="$1" msg="$2"
+repo="$(git rev-parse --show-toplevel)"
+app="$repo/s03e03/sched-prod-api"
+cd "$app"
+git add -A .
+if ! git diff --cached --quiet; then
+  git commit -q -m "s03e03 #$n: $msg"
+fi
+# The Cloudflare token comes from Bitwarden only for this one command.
+BWS_ACCESS_TOKEN="$(cat "$HOME/.config/bws/token")" bws run --project-id e75b6bf5-a991-4589-8732-b4df00cfc5e5 -- \
+  'npx --no-install wrangler deploy --env production' 2>&1 | grep -v -i token | tail -n 15
+live="$(sed -n 's/^LIVE_URL=//p' "${OOO_ENV:-$HOME/.config/out-of-office/env}")"
+echo "--- live check: GET $live/incidents"
+curl -sS -m 20 -o /dev/null -w 'HTTP %{http_code}\n' "$live/incidents"
+if [[ "${OOO_PUSH:-0}" == 1 ]]; then git push -q origin HEAD; echo "pushed $(git rev-parse --short HEAD)"; fi
