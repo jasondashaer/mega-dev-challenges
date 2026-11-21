@@ -12,4 +12,4 @@ workers_dev = true
 
 # Vars do not inherit into an env, so production names the feed itself.
 [env.production.vars]
-FEED_URL = ""
+FEED_URL = "https://hq.mega.dev/challenges/out-of-office/feed/3b2a09080350/incidents"
