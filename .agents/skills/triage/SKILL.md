@@ -132,6 +132,11 @@ When the owner answers `/answer <n>`: set the record to `status: accepted` with 
 round page. If the option holds the change until a condition (another team's go-ahead, a date, another
 issue), build it switched off and use verb `waiting` until the condition is met, then ship it.
 
+An owner entry that is not exactly `/answer <n>` for one of the record's options (a number with no
+option, two numbers, free text, a garbled line) is not an answer. Build nothing and leave the record
+`proposed`. Comment that quotes the entry, restates the numbered options and asks for `/answer <n>`,
+then post the `asked` ship line again and wait.
+
 ### Build and ship
 - Change only what the issue asks. Keep `GET /incidents` and every pinned field exactly as the
   contract says unless an accepted record changes it.
