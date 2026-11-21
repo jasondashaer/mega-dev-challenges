@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Calls the course tracker with the round's token, so the token never enters a prompt or a log.
+# Usage: tracker GET /issues | tracker POST /issues/3/comments '{"body":"…"}' | tracker PUT /records/0007-x "$(jq -n --rawfile t rec.md '{text:$t}')"
+set -euo pipefail
+env_file="${OOO_ENV:-$HOME/.config/out-of-office/env}"
+url="$(sed -n 's/^TRACKER_URL=//p' "$env_file")"
+method="$1" path="$2" body="${3:-}"
+args=(-sS -X "$method" -H "Content-Type: application/json" -H @- -w '\nHTTP %{http_code}\n')
+if [[ -n "$body" ]]; then args+=(--data-binary "$body"); fi
+# The header goes in on stdin, not argv, so it stays out of `ps`.
+sed -n 's/^TRACKER_TOKEN=/Authorization: Bearer /p' "$env_file" | curl "${args[@]}" "${url%/}$path"
