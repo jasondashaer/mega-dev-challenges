@@ -16,6 +16,13 @@ export default {
       let incidents = await feed(env);
       const status = url.searchParams.get('status');
       if (status !== null) incidents = incidents.filter((i) => i.status === status);
+      const since = url.searchParams.get('since');
+      if (since !== null) {
+        const t = Date.parse(since);
+        // A bad time must not look like "nothing new" to a polling console.
+        if (Number.isNaN(t)) return json({ error: 'since must be an ISO time' }, 400);
+        incidents = incidents.filter((i) => Date.parse(i.openedAt) > t);
+      }
       return json({ incidents });
     }
     const one = request.method === 'GET' && url.pathname.match(/^\/incidents\/([^/]+)$/);
